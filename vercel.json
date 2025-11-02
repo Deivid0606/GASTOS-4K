@@ -1,9 +1,0 @@
-// Configuración inicial
-const STORAGE_KEY = 'expenseTrackerData';
-let exchangeRate = 7300;
-let expenses = [];
-
-// Elementos del DOM
-const expenseForm = document.getElementById('expenseForm');
-const expensesList = document.getElementById('expensesList');
-// ... resto del JavaScript ...
