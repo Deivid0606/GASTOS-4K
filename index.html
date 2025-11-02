@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Gastos - Gs. y USD</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>💰 Gestión de Gastos</h1>
+            <p class="subtitle">Controla tus gastos personales y laborales en Guaraníes y Dólares</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="status-message" id="statusMessage"></div>
+        
+        <div class="exchange-rate">
+            <h3>💱 Tipo de Cambio (USD a Gs.)</h3>
+            <div class="exchange-inputs">
+                <input type="number" id="exchangeRate" step="0.01" min="0" placeholder="Tipo de cambio" value="7300">
+                <button id="updateExchangeRate" class="btn-warning">Actualizar</button>
+            </div>
+            <div class="converted-amount" id="convertedAmount">
+                $1.00 = Gs. 7,300
+            </div>
+        </div>
+        
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>👤 Gastos Personales</h3>
+                <div class="amount personal-amount" id="personalTotal">Gs. 0</div>
+            </div>
+            <div class="summary-card">
+                <h3>💼 Gastos Laborales</h3>
+                <div class="amount business-amount" id="businessTotal">Gs. 0</div>
+            </div>
+            <div class="summary-card">
+                <h3>📊 Total Gastos</h3>
+                <div class="amount total-amount" id="totalExpenses">Gs. 0</div>
+            </div>
+        </div>
+        
+        <div class="app-container">
+            <div class="form-section">
+                <h2>➕ Agregar Gasto</h2>
+                <form id="expenseForm">
+                    <div class="form-group">
+                        <label for="expenseType">Tipo de Gasto</label>
+                        <select id="expenseType" required>
+                            <option value="">Selecciona un tipo</option>
+                            <option value="personal">👤 Gasto Personal</option>
+                            <option value="business">💼 Gasto Laboral</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expenseDescription">Descripción</label>
+                        <input type="text" id="expenseDescription" placeholder="Ej. Compra de insumos" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expenseAmount">Monto</label>
+                        <div class="currency-group">
+                            <select id="expenseCurrency" required>
+                                <option value="PYG">Gs.</option>
+                                <option value="USD">USD</option>
+                            </select>
+                            <input type="number" id="expenseAmount" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expenseCategory">Categoría</label>
+                        <select id="expenseCategory" required>
+                            <option value="">Selecciona una categoría</option>
+                            <option value="alimentos">🍎 Alimentos</option>
+                            <option value="transporte">🚗 Transporte</option>
+                            <option value="servicios">⚡ Servicios</option>
+                            <option value="entretenimiento">🎬 Entretenimiento</option>
+                            <option value="salud">🏥 Salud</option>
+                            <option value="insumos">📦 Insumos</option>
+                            <option value="marketing">📢 Marketing</option>
+                            <option value="otros">📁 Otros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expenseDate">Fecha</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expenseNotes">Notas (opcional)</label>
+                        <textarea id="expenseNotes" rows="3" placeholder="Información adicional sobre el gasto"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-secondary">💾 Guardar Gasto</button>
+                </form>
+                
+                <div class="export-section">
+                    <button id="exportData" class="btn-warning">📤 Exportar Datos</button>
+                </div>
+            </div>
+            
+            <div class="expenses-section">
+                <div class="tabs">
+                    <div class="tab active" data-tab="all">📋 Todos los Gastos</div>
+                    <div class="tab" data-tab="personal">👤 Gastos Personales</div>
+                    <div class="tab" data-tab="business">💼 Gastos Laborales</div>
+                </div>
+                
+                <div class="currency-tabs">
+                    <div class="currency-tab active" data-currency="all">💱 Todas las Monedas</div>
+                    <div class="currency-tab" data-currency="PYG">🇵🇾 Solo Guaraníes</div>
+                    <div class="currency-tab" data-currency="USD">🇺🇸 Solo Dólares</div>
+                </div>
+                
+                <div class="filters">
+                    <select id="categoryFilter">
+                        <option value="">📂 Todas las categorías</option>
+                        <option value="alimentos">🍎 Alimentos</option>
+                        <option value="transporte">🚗 Transporte</option>
+                        <option value="servicios">⚡ Servicios</option>
+                        <option value="entretenimiento">🎬 Entretenimiento</option>
+                        <option value="salud">🏥 Salud</option>
+                        <option value="insumos">📦 Insumos</option>
+                        <option value="marketing">📢 Marketing</option>
+                        <option value="otros">📁 Otros</option>
+                    </select>
+                    
+                    <select id="monthFilter">
+                        <option value="">📅 Todos los meses</option>
+                        <option value="0">Enero</option>
+                        <option value="1">Febrero</option>
+                        <option value="2">Marzo</option>
+                        <option value="3">Abril</option>
+                        <option value="4">Mayo</option>
+                        <option value="5">Junio</option>
+                        <option value="6">Julio</option>
+                        <option value="7">Agosto</option>
+                        <option value="8">Septiembre</option>
+                        <option value="9">Octubre</option>
+                        <option value="10">Noviembre</option>
+                        <option value="11">Diciembre</option>
+                    </select>
+                </div>
+                
+                <div class="loading" id="loadingExpenses">
+                    <div class="spinner"></div>
+                    <p>Cargando gastos...</p>
+                </div>
+                
+                <div id="expensesList">
+                    <!-- Los gastos se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 Gestión de Gastos - Desarrollado para control personal y laboral</p>
+        </div>
+    </div>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>
